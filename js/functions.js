@@ -56,3 +56,24 @@ extractDig('а я томат');           // NaN
 extractDig(2023); // 2023
 extractDig(-1); // 1
 extractDig(1.5); // 15
+
+function isWorkHours(wStart, wEnd, mStart, mDuration) {
+  function timeToMin(time) {
+    const [hours, min] = time.split(':').map(Number);
+    return hours * 60 + min;
+  }
+
+  const wStartMin = timeToMin(wStart);
+  const wEndMin = timeToMin(wEnd);
+  const mStartMin = timeToMin(mStart);
+
+  const mEndMin = mStartMin + mDuration;
+
+  return mStartMin >= wStartMin && mEndMin <= wEndMin;
+}
+
+isWorkHours('08:00', '17:30', '14:00', 90); // true
+isWorkHours('8:0', '10:0', '8:0', 120);     // true
+isWorkHours('08:00', '14:30', '14:00', 90); // false
+isWorkHours('14:00', '17:30', '08:0', 90);  // false
+isWorkHours('8:00', '17:30', '08:00', 900); // false
