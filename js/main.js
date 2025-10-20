@@ -57,5 +57,3 @@ const createObject = (id) => ({
 });
 
 const generateObjects = () => Array.from({ length: 25 }, (_, index) => createObject(index + 1));
-
-export { generateObjects as generateObjects, NAMES, MESSAGES, DESCRIPTIONS };
