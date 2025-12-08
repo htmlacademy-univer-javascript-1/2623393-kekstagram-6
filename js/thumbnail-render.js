@@ -1,15 +1,11 @@
 const createThumbnailElement = (pictureData) => {
-  // Находим шаблон в DOM
-  const pictureTemplate = document.querySelector('#picture').content;
-  // Клонируем содержимое шаблона
-  const thumbnailElement = pictureTemplate.cloneNode(true);
+  const pictureTemplate = document.querySelector('#picture');
+  const thumbnailElement = pictureTemplate.content.cloneNode(true);
 
-  // Находим элементы внутри шаблона
   const image = thumbnailElement.querySelector('.picture__img');
   const likesElement = thumbnailElement.querySelector('.picture__likes');
   const commentsElement = thumbnailElement.querySelector('.picture__comments');
 
-  // Заполняем данными
   image.src = pictureData.url;
   image.alt = pictureData.description;
   likesElement.textContent = pictureData.likes;
@@ -20,10 +16,8 @@ const createThumbnailElement = (pictureData) => {
   return thumbnailElement;
 };
 
-// Функция для отрисовки всех миниатюр
 const renderThumbnails = (picturesData) => {
   const picturesContainer = document.querySelector('.pictures');
-
   const fragment = document.createDocumentFragment();
 
   const existingPictures = picturesContainer.querySelectorAll('.picture:not([data-template])');

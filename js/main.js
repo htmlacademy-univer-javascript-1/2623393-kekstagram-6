@@ -1,8 +1,8 @@
 import { generateObjects } from './data.js';
-import { renderThumbnails } from './thumbnail-render.js';
+import { initGallery } from './gallery.js';
 
 const picturesData = generateObjects();
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderThumbnails(picturesData);
+  initGallery(picturesData);
 });
