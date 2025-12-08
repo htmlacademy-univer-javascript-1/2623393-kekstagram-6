@@ -7,6 +7,5 @@ const picturesData = generateObjects();
 
 document.addEventListener('DOMContentLoaded', () => {
   initGallery(picturesData);
-
   initFormValidation();
 });

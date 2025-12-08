@@ -1,5 +1,8 @@
+// form-validation.js
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
+import { initScale, destroyScale } from './scale.js';
+import { initEffects, destroyEffects } from './effects.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
@@ -15,7 +18,6 @@ const submitButton = uploadForm.querySelector('.img-upload__submit');
 
 let pristine;
 
-// Функции валидации хэштегов
 const validateHashtagCount = (value) => {
   const hashtags = value.trim().split(' ').filter((tag) => tag !== '');
   return hashtags.length <= MAX_HASHTAG_COUNT;
@@ -37,10 +39,8 @@ const validateHashtagUniqueness = (value) => {
   return uniqueHashtags.size === hashtags.length;
 };
 
-// Функция валидации комментария
 const validateDescription = (value) => value.length <= MAX_COMMENT_LENGTH;
 
-// Сообщения об ошибках
 const getHashtagCountError = () => `Нельзя указать больше ${MAX_HASHTAG_COUNT} хэш-тегов`;
 
 const getHashtagFormatError = () => 'Хэш-тег должен начинаться с # и содержать только буквы и цифры (1-19 символов после #)';
@@ -49,20 +49,17 @@ const getHashtagUniquenessError = () => 'Хэш-теги не должны по�
 
 const getDescriptionError = () => `Длина комментария не может превышать ${MAX_COMMENT_LENGTH} символов`;
 
-// Обработка клавиши Esc
 const stopPropagation = (evt) => {
   if (evt.key === 'Escape') {
     evt.stopPropagation();
   }
 };
 
-// Блокировка кнопки отправки
 const toggleSubmitButton = (isDisabled) => {
   submitButton.disabled = isDisabled;
   submitButton.textContent = isDisabled ? 'Публикую...' : 'Опубликовать';
 };
 
-// Инициализация Pristine
 const initValidation = () => {
   pristine = new Pristine(uploadForm, {
     classTo: 'img-upload__field-wrapper',
@@ -73,7 +70,6 @@ const initValidation = () => {
     errorTextClass: 'img-upload__error'
   });
 
-  // Валидация количества хэштегов
   pristine.addValidator(
     hashtagInput,
     validateHashtagCount,
@@ -82,7 +78,6 @@ const initValidation = () => {
     true
   );
 
-  // Валидация формата хэштегов
   pristine.addValidator(
     hashtagInput,
     validateHashtagFormat,
@@ -91,7 +86,6 @@ const initValidation = () => {
     true
   );
 
-  // Валидация уникальности хэштегов
   pristine.addValidator(
     hashtagInput,
     validateHashtagUniqueness,
@@ -100,7 +94,6 @@ const initValidation = () => {
     true
   );
 
-  // Валидация комментария
   pristine.addValidator(
     commentInput,
     validateDescription,
@@ -108,24 +101,27 @@ const initValidation = () => {
   );
 };
 
-// Открытие формы
 const openUploadForm = () => {
   uploadOverlay.classList.remove('hidden');
   document.body.classList.add('modal-open');
+
+  initScale();
+  initEffects();
 
   hashtagInput.addEventListener('keydown', stopPropagation);
   commentInput.addEventListener('keydown', stopPropagation);
 };
 
-// Закрытие формы
 const closeUploadForm = () => {
   uploadOverlay.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
+  destroyScale();
+  destroyEffects();
+
   hashtagInput.removeEventListener('keydown', stopPropagation);
   commentInput.removeEventListener('keydown', stopPropagation);
 
-  // Сброс формы
   uploadInput.value = '';
   uploadForm.reset();
 
@@ -134,7 +130,6 @@ const closeUploadForm = () => {
   }
 };
 
-// Обработка отправки формы
 const onFormSubmit = async (evt) => {
   evt.preventDefault();
 
@@ -160,33 +155,27 @@ const onFormSubmit = async (evt) => {
   }
 };
 
-// Основная функция инициализации
 const initFormValidation = () => {
   if (!uploadInput || !uploadOverlay) {
     return;
   }
 
-  // Инициализация Pristine
   initValidation();
 
-  // Открытие формы при выборе файла
   uploadInput.addEventListener('change', () => {
     if (uploadInput.files && uploadInput.files[0]) {
       openUploadForm();
     }
   });
 
-  // Закрытие формы
   uploadCancel.addEventListener('click', closeUploadForm);
 
-  // Закрытие по Esc
   document.addEventListener('keydown', (evt) => {
     if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
       closeUploadForm();
     }
   });
 
-  // Отправка формы
   uploadForm.addEventListener('submit', onFormSubmit);
 };
 
