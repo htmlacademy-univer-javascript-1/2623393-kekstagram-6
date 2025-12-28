@@ -14,4 +14,15 @@ const sendData = async (body) => {
   return response.json();
 };
 
-export { sendData };
+// Функция загрузки данных с сервера
+const loadData = async () => {
+  const response = await fetch(`${API_URL}/data`);
+
+  if (!response.ok) {
+    throw new Error('Не удалось загрузить данные. Попробуйте ещё раз');
+  }
+
+  return response.json();
+};
+
+export { sendData, loadData };
