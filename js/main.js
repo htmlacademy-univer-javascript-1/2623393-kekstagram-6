@@ -1,11 +1,16 @@
 // main.js
-import { generateObjects } from './data.js';
+import { loadData } from './api.js';
 import { initGallery } from './gallery.js';
 import { initFormValidation } from './form-validation.js';
 
-const picturesData = generateObjects();
-
 document.addEventListener('DOMContentLoaded', () => {
-  initGallery(picturesData);
+  loadData()
+    .then((picturesData) => {
+      initGallery(picturesData);
+    })
+    .catch(() => {
+      // Ошибку загрузки игнорируем — по ТЗ не требуется сообщение
+    });
+
   initFormValidation();
 });
