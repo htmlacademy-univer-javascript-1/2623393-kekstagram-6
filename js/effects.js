@@ -1,4 +1,3 @@
-// effects.js
 const EFFECTS = {
   none: {
     min: 0,

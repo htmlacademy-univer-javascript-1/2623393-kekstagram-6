@@ -1,4 +1,3 @@
-// main.js
 import { loadData } from './api.js';
 import { initGallery, showFilters, initFilters } from './gallery.js';
 import { initFormValidation } from './form-validation.js';
