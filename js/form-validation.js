@@ -160,10 +160,14 @@ const initFormValidation = () => {
     return;
   }
 
+  const previewImage = uploadForm.querySelector('.img-upload__preview img');
+
   initValidation();
 
   uploadInput.addEventListener('change', () => {
-    if (uploadInput.files && uploadInput.files[0]) {
+    const file = uploadInput.files[0];
+    if (file) {
+      previewImage.src = URL.createObjectURL(file);
       openUploadForm();
     }
   });
