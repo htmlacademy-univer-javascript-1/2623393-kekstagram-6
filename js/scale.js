@@ -3,15 +3,18 @@ const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const DEFAULT_SCALE = 100;
 
-const scaleContainer = document.querySelector('.img-upload__scale');
-const scaleValue = scaleContainer.querySelector('.scale__control--value');
-const scaleSmallerBtn = scaleContainer.querySelector('.scale__control--smaller');
-const scaleBiggerBtn = scaleContainer.querySelector('.scale__control--bigger');
-const imagePreview = document.querySelector('.img-upload__preview img');
+let scaleValue = null;
+let scaleSmallerBtn = null;
+let scaleBiggerBtn = null;
+let imagePreview = null;
 
 let currentScale = DEFAULT_SCALE;
 
 const updateScale = () => {
+  if (!scaleValue || !imagePreview)
+  {
+    return;
+  }
   scaleValue.value = `${currentScale}%`;
   imagePreview.style.transform = `scale(${currentScale / 100})`;
 };
@@ -36,15 +39,40 @@ const resetScale = () => {
 };
 
 const initScale = () => {
+  const scaleContainer = document.querySelector('.img-upload__scale');
+  const preview = document.querySelector('.img-upload__preview img');
+
+  if (!scaleContainer || !preview) {
+    return;
+  }
+
+  scaleValue = scaleContainer.querySelector('.scale__control--value');
+  scaleSmallerBtn = scaleContainer.querySelector('.scale__control--smaller');
+  scaleBiggerBtn = scaleContainer.querySelector('.scale__control--bigger');
+  imagePreview = preview;
+
+  if (!scaleValue || !scaleSmallerBtn || !scaleBiggerBtn) {
+    return;
+  }
+
   updateScale();
   scaleSmallerBtn.addEventListener('click', onScaleSmallerClick);
   scaleBiggerBtn.addEventListener('click', onScaleBiggerClick);
 };
 
 const destroyScale = () => {
-  scaleSmallerBtn.removeEventListener('click', onScaleSmallerClick);
-  scaleBiggerBtn.removeEventListener('click', onScaleBiggerClick);
+  if (scaleSmallerBtn) {
+    scaleSmallerBtn.removeEventListener('click', onScaleSmallerClick);
+  }
+  if (scaleBiggerBtn) {
+    scaleBiggerBtn.removeEventListener('click', onScaleBiggerClick);
+  }
   resetScale();
+
+  scaleValue = null;
+  scaleSmallerBtn = null;
+  scaleBiggerBtn = null;
+  imagePreview = null;
 };
 
 export { initScale, destroyScale, resetScale };

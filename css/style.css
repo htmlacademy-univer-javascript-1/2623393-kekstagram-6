@@ -1402,7 +1402,7 @@ main {
   margin-bottom: 25px;
 }
 
-.img-upload__error {
+.pristine-error {
   position: absolute;
   bottom: -20px;
   left: 0;
@@ -1427,4 +1427,25 @@ main {
 .img-upload__submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.pristine-error {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  color: #ff4e4e;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
+.img-upload__field-wrapper--invalid .text__hashtags,
+.img-upload__field-wrapper--invalid .text__description {
+  border-color: #ff4e4e;
+  outline-color: #ff4e4e;
+}
+
+.img-upload__field-wrapper--valid .text__hashtags,
+.img-upload__field-wrapper--valid .text__description {
+  border-color: #4caf50;
+  outline-color: #4caf50;
 }

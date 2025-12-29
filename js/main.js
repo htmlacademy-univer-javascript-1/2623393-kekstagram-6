@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
       initFilters();
     })
     .catch(() => {
+      const errorElement = document.createElement('div');
+      errorElement.className = 'data-error';
+      errorElement.textContent = 'Ошибка загрузки данных';
+      document.body.appendChild(errorElement);
     });
 
   initFormValidation();
