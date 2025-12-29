@@ -19,16 +19,22 @@ const createThumbnailElement = (pictureData) => {
 const renderThumbnails = (picturesData) => {
   const picturesContainer = document.querySelector('.pictures');
   const fragment = document.createDocumentFragment();
+  const thumbnailElements = [];
 
   const existingPictures = picturesContainer.querySelectorAll('.picture:not([data-template])');
   existingPictures.forEach((picture) => picture.remove());
 
   picturesData.forEach((pictureData) => {
-    const thumbnailElement = createThumbnailElement(pictureData);
-    fragment.appendChild(thumbnailElement);
+    const thumbnailNode = createThumbnailElement(pictureData);
+    fragment.appendChild(thumbnailNode);
+    const pictureElement = thumbnailNode.querySelector('.picture');
+    if (pictureElement) {
+      thumbnailElements.push(pictureElement);
+    }
   });
 
   picturesContainer.appendChild(fragment);
+  return thumbnailElements;
 };
 
 export { renderThumbnails };

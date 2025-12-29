@@ -31,7 +31,8 @@ const getFilteredPictures = (filterType) => {
   switch (filterType) {
     case 'random': {
       const shuffled = [...currentPictures].sort(() => 0.5 - Math.random());
-      return shuffled.slice(0, 10);
+      const count = Math.min(10, shuffled.length);
+      return shuffled.slice(0, count);
     }
     case 'discussed': {
       return [...currentPictures].sort((a, b) => b.comments.length - a.comments.length);
@@ -46,28 +47,27 @@ const applyFilter = (filterType) => {
   const filtered = getFilteredPictures(filterType);
   renderThumbnails(filtered);
   addThumbnailListeners(filtered);
+};
 
+const setActiveFilterButton = (filterType) => {
   const buttons = document.querySelectorAll('.img-filters__button');
   buttons.forEach((button) => {
-    if (button.dataset.filter === filterType) {
-      button.classList.add('img-filters__button--active');
-    } else {
-      button.classList.remove('img-filters__button--active');
-    }
+    button.classList.toggle('img-filters__button--active', button.dataset.filter === filterType);
   });
 };
 
-const debouncedApplyFilter = debounce((filterType) => {
-  applyFilter(filterType);
-}, 500);
+const debouncedApplyFilter = debounce(applyFilter, 500);
 
 export const initFilters = () => {
   const buttons = document.querySelectorAll('.img-filters__button');
   buttons.forEach((button) => {
     button.addEventListener('click', () => {
       const filterType = button.dataset.filter;
+      setActiveFilterButton(filterType);
       debouncedApplyFilter(filterType);
     });
   });
+
+  setActiveFilterButton('default');
   applyFilter('default');
 };

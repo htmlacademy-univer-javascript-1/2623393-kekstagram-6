@@ -1,4 +1,3 @@
-// form-validation.js
 import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
 import { initScale, destroyScale } from './scale.js';
@@ -67,7 +66,7 @@ const initValidation = () => {
     successClass: 'img-upload__field-wrapper--valid',
     errorTextParent: 'img-upload__field-wrapper',
     errorTextTag: 'div',
-    errorTextClass: 'img-upload__error'
+    errorTextClass: 'pristine-error'
   });
 
   pristine.addValidator(
@@ -122,6 +121,24 @@ const closeUploadForm = () => {
   hashtagInput.removeEventListener('keydown', stopPropagation);
   commentInput.removeEventListener('keydown', stopPropagation);
 
+  const previewImage = uploadForm.querySelector('.img-upload__preview img');
+  if (previewImage.src) {
+    URL.revokeObjectURL(previewImage.src);
+    previewImage.src = '';
+  }
+
+  const effectsPreviews = uploadForm.querySelectorAll('.effects__preview');
+  effectsPreviews.forEach((preview) => {
+    const bgStyle = preview.style.backgroundImage;
+    const matchResult = bgStyle.match(/url\("?(.*?)"?\)/);
+    const bgUrl = matchResult ? matchResult[1] : null;
+
+    if (bgUrl && bgUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(bgUrl);
+      preview.style.backgroundImage = '';
+    }
+  });
+
   uploadInput.value = '';
   uploadForm.reset();
 
@@ -160,14 +177,21 @@ const initFormValidation = () => {
     return;
   }
 
-  const previewImage = uploadForm.querySelector('.img-upload__preview img');
-
   initValidation();
 
   uploadInput.addEventListener('change', () => {
     const file = uploadInput.files[0];
     if (file) {
-      previewImage.src = URL.createObjectURL(file);
+      const blobUrl = URL.createObjectURL(file);
+
+      const previewImage = uploadForm.querySelector('.img-upload__preview img');
+      previewImage.src = blobUrl;
+
+      const effectsPreviews = uploadForm.querySelectorAll('.effects__preview');
+      effectsPreviews.forEach((preview) => {
+        preview.style.backgroundImage = `url(${blobUrl})`;
+      });
+
       openUploadForm();
     }
   });
@@ -175,7 +199,12 @@ const initFormValidation = () => {
   uploadCancel.addEventListener('click', closeUploadForm);
 
   document.addEventListener('keydown', (evt) => {
-    if (evt.key === 'Escape' && !uploadOverlay.classList.contains('hidden')) {
+    if (
+      evt.key === 'Escape' &&
+      !uploadOverlay.classList.contains('hidden') &&
+      !document.querySelector('.success') &&
+      !document.querySelector('.error')
+    ) {
       closeUploadForm();
     }
   });

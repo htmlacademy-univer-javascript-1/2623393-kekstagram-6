@@ -17,9 +17,32 @@
     <section class="img-filters  img-filters--inactive  container">
       <h2 class="img-filters__title  visually-hidden">Фильтр фотографий</h2>
       <form class="img-filters__form" action="index.html" method="get" autocomplete="off">
-        <button type="button" class="img-filters__button img-filters__button--active" data-filter="default">По умолчанию</button>
-        <button type="button" class="img-filters__button" data-filter="random">Случайные</button>
-        <button type="button" class="img-filters__button" data-filter="discussed">Обсуждаемые</button>
+      <button
+        type="button"
+        class="img-filters__button img-filters__button--active"
+        data-filter="default"
+        id="filter-default"
+      >
+      По умолчанию
+      </button>
+
+      <button
+        type="button"
+        class="img-filters__button"
+        data-filter="random"
+        id="filter-random"
+      >
+        Случайные
+      </button>
+
+      <button
+        type="button"
+        class="img-filters__button"
+        data-filter="discussed"
+        id="filter-discussed"
+      >
+        Обсуждаемые
+      </button>
       </form>
     </section>
 
@@ -120,7 +143,7 @@
                     <input class="text__hashtags" name="hashtags" placeholder="#ХэшТег">
                   </div>
                   <div class="img-upload__field-wrapper">
-                    <textarea class="text__description" name="description" placeholder="Ваш комментарий..." maxLength="140"></textarea>
+                    <textarea class="text__description" name="description" placeholder="Ваш комментарий..." maxLength="999999"></textarea>
                   </div>
                 </fieldset>
 
@@ -233,7 +256,6 @@
     <div class="img-upload__message  img-upload__message--loading">Загружаем...</div>
   </template>
   <script src="vendor/pristine/pristine.min.js"></script>
-  <script src="js/functions.js"></script>
   <script src="vendor/node_modules/nouislider/dist/nouislider.min.js"></script>
   <script type="module" src="js/main.js"></script>
 </body>

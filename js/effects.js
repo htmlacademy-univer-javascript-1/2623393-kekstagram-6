@@ -1,4 +1,4 @@
-const EFFECTS = {
+const Effects = {
   none: {
     min: 0,
     max: 100,
@@ -60,7 +60,7 @@ const applyEffect = (value) => {
     return;
   }
 
-  const { filter, unit } = EFFECTS[currentEffect];
+  const { filter, unit } = Effects[currentEffect];
   imagePreview.style.filter = `${filter}(${value}${unit})`;
 };
 
@@ -77,13 +77,17 @@ const initSlider = () => {
     return;
   }
 
+  if (effectLevelSlider.noUiSlider) {
+    effectLevelSlider.noUiSlider.destroy();
+  }
+
   slider = noUiSlider.create(effectLevelSlider, {
     range: {
-      min: EFFECTS[currentEffect].min,
-      max: EFFECTS[currentEffect].max,
+      min: Effects[currentEffect].min,
+      max: Effects[currentEffect].max,
     },
-    start: EFFECTS[currentEffect].max,
-    step: EFFECTS[currentEffect].step,
+    start: Effects[currentEffect].max,
+    step: Effects[currentEffect].step,
     connect: 'lower',
     format: {
       to: (value) => {
@@ -107,11 +111,11 @@ const updateSlider = () => {
   if (slider) {
     slider.updateOptions({
       range: {
-        min: EFFECTS[currentEffect].min,
-        max: EFFECTS[currentEffect].max,
+        min: Effects[currentEffect].min,
+        max: Effects[currentEffect].max,
       },
-      start: EFFECTS[currentEffect].max,
-      step: EFFECTS[currentEffect].step,
+      start: Effects[currentEffect].max,
+      step: Effects[currentEffect].step,
     });
   }
 };
@@ -120,7 +124,7 @@ const onEffectChange = (evt) => {
   if (evt.target.matches('input[type="radio"]')) {
     currentEffect = evt.target.value;
 
-    const maxValue = EFFECTS[currentEffect].max;
+    const maxValue = Effects[currentEffect].max;
     effectLevelValue.value = maxValue;
 
     updateSlider();
@@ -138,7 +142,7 @@ const resetEffects = () => {
   }
 
   if (slider) {
-    const maxValue = EFFECTS[currentEffect].max;
+    const maxValue = Effects[currentEffect].max;
     effectLevelValue.value = maxValue;
     updateSlider();
     applyEffect(maxValue);
@@ -155,7 +159,7 @@ const initEffects = () => {
   toggleSliderVisibility();
   effectsContainer.addEventListener('change', onEffectChange);
 
-  const maxValue = EFFECTS[currentEffect].max;
+  const maxValue = Effects[currentEffect].max;
   effectLevelValue.value = maxValue;
   applyEffect(maxValue);
 };
