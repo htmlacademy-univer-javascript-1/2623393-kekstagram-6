@@ -3,10 +3,13 @@ const MIN_SCALE = 25;
 const MAX_SCALE = 100;
 const DEFAULT_SCALE = 100;
 
-let scaleValue = null;
-let scaleSmallerBtn = null;
-let scaleBiggerBtn = null;
-let imagePreview = null;
+const scaleContainer = document.querySelector('.img-upload__scale');
+const preview = document.querySelector('.img-upload__preview img');
+
+const scaleValue = scaleContainer ? scaleContainer.querySelector('.scale__control--value') : null;
+const scaleSmallerBtn = scaleContainer ? scaleContainer.querySelector('.scale__control--smaller') : null;
+const scaleBiggerBtn = scaleContainer ? scaleContainer.querySelector('.scale__control--bigger') : null;
+const imagePreview = preview;
 
 let currentScale = DEFAULT_SCALE;
 
@@ -39,23 +42,12 @@ const resetScale = () => {
 };
 
 const initScale = () => {
-  const scaleContainer = document.querySelector('.img-upload__scale');
-  const preview = document.querySelector('.img-upload__preview img');
-
-  if (!scaleContainer || !preview) {
+  if (!scaleValue || !scaleSmallerBtn || !scaleBiggerBtn || !imagePreview) {
     return;
   }
 
-  scaleValue = scaleContainer.querySelector('.scale__control--value');
-  scaleSmallerBtn = scaleContainer.querySelector('.scale__control--smaller');
-  scaleBiggerBtn = scaleContainer.querySelector('.scale__control--bigger');
-  imagePreview = preview;
+  resetScale();
 
-  if (!scaleValue || !scaleSmallerBtn || !scaleBiggerBtn) {
-    return;
-  }
-
-  updateScale();
   scaleSmallerBtn.addEventListener('click', onScaleSmallerClick);
   scaleBiggerBtn.addEventListener('click', onScaleBiggerClick);
 };
@@ -67,12 +59,6 @@ const destroyScale = () => {
   if (scaleBiggerBtn) {
     scaleBiggerBtn.removeEventListener('click', onScaleBiggerClick);
   }
-  resetScale();
-
-  scaleValue = null;
-  scaleSmallerBtn = null;
-  scaleBiggerBtn = null;
-  imagePreview = null;
 };
 
 export { initScale, destroyScale, resetScale };

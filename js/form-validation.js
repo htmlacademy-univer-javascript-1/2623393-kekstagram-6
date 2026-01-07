@@ -2,6 +2,7 @@ import { sendData } from './api.js';
 import { showSuccessMessage, showErrorMessage } from './message.js';
 import { initScale, destroyScale } from './scale.js';
 import { initEffects, destroyEffects } from './effects.js';
+import { isEscapeKey } from './util.js';
 
 const MAX_HASHTAG_COUNT = 5;
 const MAX_COMMENT_LENGTH = 140;
@@ -47,12 +48,6 @@ const getHashtagFormatError = () => 'Хэш-тег должен начинать
 const getHashtagUniquenessError = () => 'Хэш-теги не должны повторяться';
 
 const getDescriptionError = () => `Длина комментария не может превышать ${MAX_COMMENT_LENGTH} символов`;
-
-const stopPropagation = (evt) => {
-  if (evt.key === 'Escape') {
-    evt.stopPropagation();
-  }
-};
 
 const toggleSubmitButton = (isDisabled) => {
   submitButton.disabled = isDisabled;
@@ -107,8 +102,6 @@ const openUploadForm = () => {
   initScale();
   initEffects();
 
-  hashtagInput.addEventListener('keydown', stopPropagation);
-  commentInput.addEventListener('keydown', stopPropagation);
 };
 
 const closeUploadForm = () => {
@@ -117,9 +110,6 @@ const closeUploadForm = () => {
 
   destroyScale();
   destroyEffects();
-
-  hashtagInput.removeEventListener('keydown', stopPropagation);
-  commentInput.removeEventListener('keydown', stopPropagation);
 
   const previewImage = uploadForm.querySelector('.img-upload__preview img');
   if (previewImage.src) {
@@ -200,10 +190,12 @@ const initFormValidation = () => {
 
   document.addEventListener('keydown', (evt) => {
     if (
-      evt.key === 'Escape' &&
+      isEscapeKey(evt) &&
       !uploadOverlay.classList.contains('hidden') &&
       !document.querySelector('.success') &&
-      !document.querySelector('.error')
+      !document.querySelector('.error') &&
+      document.activeElement !== hashtagInput &&
+      document.activeElement !== commentInput
     ) {
       closeUploadForm();
     }

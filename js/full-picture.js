@@ -1,3 +1,5 @@
+import { isEscapeKey } from './util.js';
+
 let fullScreenModal = null;
 let bigPictureImage = null;
 let likesCountElement = null;
@@ -58,11 +60,11 @@ const renderCommentsPortion = (comments, renderedCount, container, loader, count
 
   const shownSpan = document.createElement('span');
   shownSpan.classList.add('social__comment-shown-count');
-  shownSpan.textContent = String(newRenderedCount);
+  shownSpan.textContent = newRenderedCount;
 
   const totalSpan = document.createElement('span');
   totalSpan.classList.add('social__comment-total-count');
-  totalSpan.textContent = String(comments.length);
+  totalSpan.textContent = comments.length;
 
   countBlock.append(shownSpan, ' из ', totalSpan, ' комментариев');
 
@@ -189,8 +191,8 @@ const openFullPicture = (pictureData) => {
 
   bigPictureImage.src = pictureData.url;
   bigPictureImage.alt = pictureData.description;
-  likesCountElement.textContent = String(pictureData.likes);
-  commentsCountElement.textContent = String(pictureData.comments.length);
+  likesCountElement.textContent = pictureData.likes;
+  commentsCountElement.textContent = pictureData.comments.length;
   socialCaptionElement.textContent = pictureData.description;
 
   renderComments(pictureData.comments);
@@ -204,7 +206,7 @@ const openFullPicture = (pictureData) => {
   };
 
   documentKeydownHandler = (evt) => {
-    if (evt.key === 'Escape' && fullScreenModal && !fullScreenModal.classList.contains('hidden')) {
+    if (isEscapeKey(evt) && fullScreenModal && !fullScreenModal.classList.contains('hidden')) {
       closeFullPicture();
     }
   };
