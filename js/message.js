@@ -1,3 +1,5 @@
+import { isEscapeKey } from './util.js';
+
 const successTemplate = document.querySelector('#success');
 const errorTemplate = document.querySelector('#error');
 
@@ -16,15 +18,13 @@ const closeErrorModal = () => {
 };
 
 const onDocumentKeydown = (evt) => {
-  if (evt.key === 'Escape') {
+  if (isEscapeKey(evt)) {
     const successModal = document.querySelector('.success');
     const errorModal = document.querySelector('.error');
 
     if (successModal) {
-      evt.stopPropagation();
       closeSuccessModal();
     } else if (errorModal) {
-      evt.stopPropagation();
       closeErrorModal();
     }
   }
@@ -46,28 +46,33 @@ const onErrorButtonClick = () => {
   closeErrorModal();
 };
 
-const showSuccessMessage = () => {
-  const successElement = successTemplate.content.cloneNode(true);
-  document.body.appendChild(successElement);
+// фугкция для отображения
+const showModal = (template, closeButtonClickHandler, closeModalHandler) => {
+  const modalElement = template.content.cloneNode(true);
+  document.body.appendChild(modalElement);
 
-  const successModal = document.querySelector('.success');
-  const successButton = successModal.querySelector('.success__button');
+  const modal = document.querySelector(`.${template.id}`);
+  const closeButton = modal.querySelector('button');
 
-  successButton.addEventListener('click', onSuccessButtonClick);
-  successModal.addEventListener('click', onModalClick);
+  closeButton.addEventListener('click', closeButtonClickHandler);
+  modal.addEventListener('click', closeModalHandler);
   document.addEventListener('keydown', onDocumentKeydown);
+};
+
+const showSuccessMessage = () => {
+  showModal(successTemplate, onSuccessButtonClick, onModalClick);
 };
 
 const showErrorMessage = () => {
-  const errorElement = errorTemplate.content.cloneNode(true);
-  document.body.appendChild(errorElement);
-
-  const errorModal = document.querySelector('.error');
-  const errorButton = errorModal.querySelector('.error__button');
-
-  errorButton.addEventListener('click', onErrorButtonClick);
-  errorModal.addEventListener('click', onModalClick);
-  document.addEventListener('keydown', onDocumentKeydown);
+  showModal(errorTemplate, onErrorButtonClick, onModalClick);
 };
 
-export { showSuccessMessage, showErrorMessage };
+// функция для ошибки загрузки данных красным и висит сверху над версткой
+const showDataError = () => {
+  const errorElement = document.createElement('div');
+  errorElement.className = 'data-error';
+  errorElement.textContent = 'Ошибка загрузки данных';
+  document.body.appendChild(errorElement);
+};
+
+export { showSuccessMessage, showErrorMessage, showDataError};

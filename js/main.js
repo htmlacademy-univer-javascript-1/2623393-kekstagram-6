@@ -1,6 +1,7 @@
 import { loadData } from './api.js';
 import { initGallery, showFilters, initFilters } from './gallery.js';
 import { initFormValidation } from './form-validation.js';
+import { showDataError } from './message.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   loadData()
@@ -10,10 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
       initFilters();
     })
     .catch(() => {
-      const errorElement = document.createElement('div');
-      errorElement.className = 'data-error';
-      errorElement.textContent = 'Ошибка загрузки данных';
-      document.body.appendChild(errorElement);
+      showDataError();
     });
 
   initFormValidation();
